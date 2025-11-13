@@ -1,0 +1,24 @@
+{
+  "name": "version-control-proto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "vcs.js",
+  "bin": {
+    "vcs": "./vcs.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janghw0126/version-control-proto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/janghw0126/version-control-proto/issues"
+  },
+  "homepage": "https://github.com/janghw0126/version-control-proto#readme"
+}
