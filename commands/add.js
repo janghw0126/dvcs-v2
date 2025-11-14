@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const sha1 = require('./utils/sha1');
+const sha1 = require('../utils/sha1');
 
 function add(filepath) {
   const repoPath = path.join(process.cwd(), '.vcs');
@@ -30,6 +30,7 @@ function add(filepath) {
   // objects/dir 디렉토리 생성
   const objectDir = path.join(repoPath, 'objects', dir);
 
+  // 디렉토리 존재하지 않으면 새로 생성
   if (!fs.existsSync(objectDir)) {
     fs.mkdirSync(objectDir, { recursive: true });
   }
@@ -45,7 +46,7 @@ function add(filepath) {
   console.log(`파일이 스테이지에 추가되었습니다: ${filePath}`);
   console.log(`저장된 blob: objects/${dir}/${filename}`);
 
-  // 스테이징 영역 추가
+  // 스테이징 영역(index)에 추가
   const indexPath = path.join(repoPath, 'index');
   const indexEntry = `${hash} ${filePath}\n`;
 
