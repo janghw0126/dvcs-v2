@@ -27,30 +27,66 @@ function add(filepath) {
   const dir = hash.substring(0, 2);
   const filename = hash.substring(2);
 
-  // objects/dir 디렉토리 생성
+  // blob 경로 생성
   const objectDir = path.join(repoPath, 'objects', dir);
+  const objectPath = path.join(objectDir, filename);
 
-  // 디렉토리 존재하지 않으면 새로 생성
+  // blob 폴더 생성
   if (!fs.existsSync(objectDir)) {
     fs.mkdirSync(objectDir, { recursive: true });
   }
 
   // blob 파일 생성
-  const objectPath = path.join(objectDir, filename);
-
-  // 중복 확인(같은 내용의 파일인 경우)
   if (!fs.existsSync(objectPath)) {
     fs.writeFileSync(objectPath, content);
   }
 
-  console.log(`파일이 스테이지에 추가되었습니다: ${filepath}`);
-  console.log(`저장된 blob: objects/${dir}/${filename}`);
-
-  // 스테이징 영역(index)에 추가
+  // index 파일 경로 생성
   const indexPath = path.join(repoPath, 'index');
-  const indexEntry = `${hash} ${filepath}\n`;
 
-  fs.appendFileSync(indexPath, indexEntry);
+  // index 파일이 없으면 생성
+  if (!fs.existsSync(indexPath)) {
+    fs.writeFileSync(indexPath, '');
+  }
+
+  // index 읽기
+  const indexContent = fs.readFileSync(indexPath, 'utf-8');
+  const lines = indexContent
+    .trim()
+    .split('\n')
+    .filter((line) => line.length > 0);
+
+  // 같은 파일이 index에 이미 있는지 찾기
+  const updatedLines = [];
+  let found = false;
+
+  // index 파일 업데이트
+  for (const line of lines) {
+    const [oldHash, oldPath] = line.split(' ');
+
+    if (oldPath === filepath) {
+      // 파일이 이미 스테이지에 있던 경우
+      found = true;
+      if (oldHash !== hash) {
+        console.log('스테이지된 파일이 수정되었습니다.');
+        updatedLines.push(`${hash} ${filepath}`);
+      } else {
+        console.log('파일이 이미 스테이지에 있습니다.');
+        updatedLines.push(line);
+      }
+    } else {
+      updatedLines.push(line);
+    }
+  }
+
+  // 새로운 파일일 때
+  if (!found) {
+    console.log('새로운 파일이 스테이지에 추가되었습니다.');
+    updatedLines.push(`${hash} ${filepath}`);
+  }
+
+  // index 파일 덮어쓰기
+  fs.writeFileSync(indexPath, updatedLines.join('\n') + '\n');
 }
 
 module.exports = add;
