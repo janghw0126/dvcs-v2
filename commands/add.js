@@ -14,13 +14,13 @@ function add(filepath) {
   }
 
   // 추가하려는 파일이 존재하는지 확인
-  if (!fs.existsSync(filePath)) {
-    console.log(`파일을 찾을 수 없습니다: ${filePath}`);
+  if (!fs.existsSync(filepath)) {
+    console.log(`파일을 찾을 수 없습니다: ${filepath}`);
     return;
   }
 
   // 파일 읽기
-  const content = fs.readFileSync(filePath);
+  const content = fs.readFileSync(filepath);
 
   // SHA-1 해시 생성
   const hash = sha1(content);
@@ -43,12 +43,12 @@ function add(filepath) {
     fs.writeFileSync(objectPath, content);
   }
 
-  console.log(`파일이 스테이지에 추가되었습니다: ${filePath}`);
+  console.log(`파일이 스테이지에 추가되었습니다: ${filepath}`);
   console.log(`저장된 blob: objects/${dir}/${filename}`);
 
   // 스테이징 영역(index)에 추가
   const indexPath = path.join(repoPath, 'index');
-  const indexEntry = `${hash} ${filePath}\n`;
+  const indexEntry = `${hash} ${filepath}\n`;
 
   fs.appendFileSync(indexPath, indexEntry);
 }
