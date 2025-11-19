@@ -1,6 +1,7 @@
 const init = require('./commands/init.js');
 const add = require('./commands/add.js');
 const commit = require('./commands/commit.js');
+const log = require('./commands/log.js');
 
 // 사용자가 입력한 순수 명령어 받음
 const args = process.argv.slice(2);
@@ -20,6 +21,10 @@ switch (command) {
 
   case 'commit':
     commit(message);
+    break;
+
+  case 'log':
+    log();
     break;
 
   default:
