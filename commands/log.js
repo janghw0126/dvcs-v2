@@ -39,6 +39,9 @@ function log() {
     const content = fs.readFileSync(commitObjectPath, 'utf-8').trim();
     const lines = content.split('\n');
 
+    let parentHash = '';
+    let commitMessage = '';
+
     // 파싱
     for (const line of lines) {
       if (line.startsWith('parent ')) {
