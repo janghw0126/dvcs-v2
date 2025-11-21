@@ -3,6 +3,7 @@ const add = require('./commands/add.js');
 const commit = require('./commands/commit.js');
 const log = require('./commands/log.js');
 const branch = require('./commands/branch.js');
+const checkout = require('./commands/checkout.js');
 
 // 사용자가 입력한 순수 명령어 받음
 const args = process.argv.slice(2);
@@ -31,6 +32,10 @@ switch (command) {
 
   case 'branch':
     branch(branchName);
+    break;
+
+  case 'checkout':
+    checkout(branchName);
     break;
 
   default:
