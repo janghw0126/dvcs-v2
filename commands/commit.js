@@ -105,8 +105,22 @@ function commit(message) {
 
   // 부모 commit 해시 불러오기
   let parent = '';
+  let branchRefsPath = '';
+
   if (fs.existsSync(headPath)) {
-    parent = fs.readFileSync(headPath, 'utf-8').trim();
+    const headContent = fs.readFileSync(headPath, 'utf-8').trim();
+
+    if (headContent.startsWith('ref: ')) {
+      // HEAD가 브랜치를 가리키는 경우
+      const ref = headContent.substring('ref: '.length).trim();
+      branchRefsPath = path.join(repoPath, ref);
+      if (fs.existsSync(branchRefsPath)) {
+        parent = fs.readFileSync(branchRefsPath, 'utf-8').trim();
+      }
+    } else {
+      // detached HEAD일 경우 HEAD 자체가 commit 해시를 가지도록 하기
+      parent = headContent;
+    }
   }
 
   // commit 객체 생성하기
@@ -147,8 +161,14 @@ function commit(message) {
   const commitObjectPath = path.join(commitFolder, commitFile);
   fs.writeFileSync(commitObjectPath, commitContent);
 
-  // HEAD 업데이트하기
-  fs.writeFileSync(headPath, commitHash);
+  // 브랜치 파일에 commit hash 업데이트 하기
+  if (branchRefsPath) {
+    fs.writeFileSync(branchRefsPath, commitHash);
+  } else {
+    fs.writeFileSync(headPath, commitHash);
+  }
+
+  // 커밋 출력하기
   console.log(`새 커밋이 생성되었습니다. ${commitHash}`);
 }
 
