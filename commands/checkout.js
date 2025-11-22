@@ -57,8 +57,6 @@ function checkout(branchName) {
 
   // 브랜치 이름이 가리키는 commit 해시 읽기
   const commitHash = fs.readFileSync(branchPath, 'utf-8').trim();
-  console.log(`브랜치가 ${branchName}으로 체크아웃 되었습니다.`);
-  console.log(`현재 커밋: ${commitHash}\n`);
 
   // 커밋 객체 로드
   const commitDir = commitHash.substring(0, 2);
@@ -93,6 +91,14 @@ function checkout(branchName) {
   for (const file in indexFiles) {
     const filePath = path.join(process.cwd(), file);
 
+    // 파일이 워킹 트리에서 삭제된 경우
+    if (!fs.existsSync(filePath)) {
+      console.log('[Error] 삭제된 파일이 아직 커밋되지 않았습니다.');
+      console.log(`삭제된 파일: ${file}`);
+      console.log('파일을 복구하거나 변경 내용을 커밋한 뒤 다시 시도하세요!');
+      return;
+    }
+
     // 작업 디렉토리의 내용과 인덱스의 내용이 다를 경우
     if (fs.existsSync(filePath)) {
       const workingContent = fs.readFileSync(filePath, 'utf-8');
@@ -106,11 +112,28 @@ function checkout(branchName) {
 
       if (workingContent !== blobContent) {
         console.log(
-          '[Error] 작업 디렉토리에 저장되지 않은 변경 사항이 있습니다.'
+          '[Error] 커밋되지 않은 변경 사항이 있어 브랜치를 변경할 수 없습니다.'
         );
-        console.log('변경된 사항을 먼저 커밋해주세요!');
+        console.log(`변경된 파일: ${file}`);
+        console.log('먼저 변경한 파일을 커밋하거나 되돌리세요!');
         return;
       }
+    }
+  }
+
+  // untracked 파일이 충돌하는지 확인
+  for (const file in commitFiles) {
+    const targetPath = path.join(process.cwd(), file);
+
+    const isUntracked = !indexFiles[file] && fs.existsSync(targetPath);
+
+    if (isUntracked) {
+      console.log(
+        '[Error] checkout하려는 브랜치의 파일이 untracked 파일과 충돌합니다.'
+      );
+      console.log(`충돌 파일: ${file}`);
+      console.log('파일을 이동하거나 삭제한 뒤 다시 시도하세요!');
+      return;
     }
   }
 
@@ -150,6 +173,8 @@ function checkout(branchName) {
 
   fs.writeFileSync(indexPath, newIndexContent, 'utf-8');
 
+  console.log(`브랜치가 ${branchName}으로 체크아웃 되었습니다.`);
+  console.log(`현재 커밋: ${commitHash}\n`);
   console.log('워킹 디렉토리가 복원되었습니다.');
 }
 
