@@ -1,17 +1,17 @@
 {
-  "name": "version-control-proto",
+  "name": "distributed-version-control-system",
   "version": "1.0.0",
   "description": "",
-  "main": "vcs.js",
+  "main": "dvcs.js",
   "bin": {
-    "vcs": "./vcs.js"
+    "vcs": "./dvcs.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/janghw0126/version-control-proto.git"
+    "url": "git+https://github.com/janghw0126/distributed-version-control-system.git"
   },
   "keywords": [],
   "author": "",

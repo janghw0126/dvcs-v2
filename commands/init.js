@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 function init() {
-  // 현재 명령어를 실행한 위치에 .vcs 폴더를 만들기 위해 정확한 전체 경로를 만듦
-  const repoPath = path.join(process.cwd(), '.vcs');
+  // 현재 명령어를 실행한 위치에 .dvcs 폴더를 만들기 위해 정확한 전체 경로를 만듦
+  const repoPath = path.join(process.cwd(), '.dvcs');
 
   if (!fs.existsSync(repoPath)) {
     // 폴더 생성
@@ -17,10 +17,10 @@ function init() {
     fs.writeFileSync(path.join(repoPath, 'HEAD'), '');
 
     console.log(
-      '.vcs/ 폴더가 생성되었고, 버전 관리를 위한 기본 구조가 준비되었습니다.'
+      '.dvcs/ 폴더가 생성되었고, 버전 관리를 위한 기본 구조가 준비되었습니다.'
     );
   } else {
-    console.log('.vcs가 이미 존재합니다.');
+    console.log('.dvcs가 이미 존재합니다.');
   }
 }
 

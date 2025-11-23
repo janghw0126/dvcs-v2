@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 function branch(branchName) {
-  const repoPath = path.join(process.cwd(), '.vcs');
+  const repoPath = path.join(process.cwd(), '.dvcs');
   const headPath = path.join(repoPath, 'HEAD');
   const branchesPath = path.join(repoPath, 'refs', 'heads');
   const newBranchPath = path.join(branchesPath, branchName);

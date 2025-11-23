@@ -68,15 +68,15 @@ function generateTree(node, objectsPath) {
 }
 
 function commit(message) {
-  const repoPath = path.join(process.cwd(), '.vcs');
+  const repoPath = path.join(process.cwd(), '.dvcs');
   const indexPath = path.join(repoPath, 'index');
   const objectsPath = path.join(repoPath, 'objects');
   const headPath = path.join(repoPath, 'HEAD');
 
-  // vcs 폴더가 없는 경우
+  // dvcs 폴더가 없는 경우
   if (!fs.existsSync(repoPath)) {
     console.log(
-      "현재 디렉토리가 vcs 레포지토리가 아닙니다. 먼저 'vcs init'을 실행하세요."
+      "현재 디렉토리가 dvcs 레포지토리가 아닙니다. 먼저 'dvcs init'을 실행하세요."
     );
     return;
   }

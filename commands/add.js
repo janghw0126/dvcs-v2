@@ -3,12 +3,12 @@ const path = require('path');
 const sha1 = require('../utils/sha1');
 
 function add(filepath) {
-  const repoPath = path.join(process.cwd(), '.vcs');
+  const repoPath = path.join(process.cwd(), '.dvcs');
 
-  // .vcs가 존재하는지 확인
+  // .dvcs가 존재하는지 확인
   if (!fs.existsSync(repoPath)) {
     console.log(
-      "현재 디렉토리가 vcs 레포지토리가 아닙니다. 먼저 'vcs init'을 실행하세요."
+      "현재 디렉토리가 dvcs 레포지토리가 아닙니다. 먼저 'dvcs init'을 실행하세요."
     );
     return;
   }

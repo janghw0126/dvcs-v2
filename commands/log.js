@@ -3,14 +3,14 @@ const path = require('path');
 
 // 커밋을 따라서 로그 출력
 function log() {
-  const repoPath = path.join(process.cwd(), '.vcs');
+  const repoPath = path.join(process.cwd(), '.dvcs');
   const objectsPath = path.join(repoPath, 'objects');
   const headPath = path.join(repoPath, 'HEAD');
 
-  // vcs 레포지토리 확인
+  // dvcs 레포지토리 확인
   if (!fs.existsSync(repoPath)) {
     console.log(
-      "현재 디렉토리가 vcs 레포지토리가 아닙니다. 먼저 'vcs init'을 실행하세요."
+      "현재 디렉토리가 dvcs 레포지토리가 아닙니다. 먼저 'dvcs init'을 실행하세요."
     );
     return;
   }

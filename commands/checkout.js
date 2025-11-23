@@ -41,7 +41,7 @@ function readTree(treeHash, objectsPath, prefix = '') {
 }
 
 function checkout(branchName) {
-  const repoPath = path.join(process.cwd(), '.vcs');
+  const repoPath = path.join(process.cwd(), '.dvcs');
   const headPath = path.join(repoPath, 'HEAD');
   const branchPath = path.join(repoPath, 'refs', 'heads', branchName);
   const objectsPath = path.join(repoPath, 'objects');
