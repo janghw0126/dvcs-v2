@@ -6,6 +6,7 @@ const branch = require('./commands/branch.js');
 const checkout = require('./commands/checkout.js');
 const status = require('./commands/status.js');
 const merge = require('./commands/merge');
+const reset = require('./commands/reset');
 
 // 사용자가 입력한 순수 명령어 받음
 const args = process.argv.slice(2);
@@ -45,6 +46,10 @@ switch (command) {
 
   case 'merge':
     merge(arg1);
+    break;
+
+  case 'reset':
+    reset(arg1);
     break;
 
   default:
