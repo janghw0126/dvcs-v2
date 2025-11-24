@@ -6,8 +6,7 @@
 - [프로젝트 목표](#프로젝트-목표)
 - [주요 구현 기능 목록](#주요-구현-기능-목록)
 - [프로젝트 구조](#프로젝트-구조)
-- [버전 관리 실행 시 동작되는 .dvcs 내부 구조](#버전-관리-실행-시-동작되는-dvcs-내부-구조)
-- [.dvcs 내부 객체 구조](#.dvcs-내부-객체-구조)
+- [버전 관리 시 생성되는 .dvcs 내부 구조](#버전-관리-시-생성되는-dvcs-내부-구조)
 - [설치 및 실행 방법](#설치-및-실행-방법)
 - [명령어 상세 설명](#명령어-상세-설명)
 - [테스트 실행 방법](#테스트-실행-방법)
@@ -125,7 +124,7 @@ distributed-version-control-system
 
 ---
 
-## 버전 관리 실행 시 동작되는 .dvcs 내부 구조
+## 버전 관리 시 생성되는 .dvcs 내부 구조
 분산형 버전 관리 시스템의 원리를 참고하여 `.dvcs` 디렉토리를 구성하고,  
 Blob, Tree, Commit 객체를 `objects/` 아래에 저장하는 구조로 구현했습니다.
 
@@ -143,8 +142,7 @@ Blob, Tree, Commit 객체를 `objects/` 아래에 저장하는 구조로 구현�
 ```
 
 ###  .dvcs 내부 객체 구조
-
-<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/8ef22283-6089-4aeb-837c-3e1869c5816e" />
+<img width="321" height="503" alt="image" src="https://github.com/user-attachments/assets/cbb05c68-23af-45c3-88d8-3c77ea9ae1e4" />
 
 #### 1. Blob
 파일의 내용 그 자체를 SHA-1 함수를 통해 해싱하여 저장합니다.
@@ -152,8 +150,6 @@ Blob, Tree, Commit 객체를 `objects/` 아래에 저장하는 구조로 구현�
 #### 2. Tree
 한 시점의 디렉토리 스냅샷을 기록합니다.
 commit 시에 폴더 구조 + 파일명 + blob 해시가 기록된 객체를 생성합니다.
-
-<img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/a7bd1781-b8c7-40e7-8f47-a79f826c57e8" />
 
 #### 3. Commit
 Tree를 해시화한 값, parent 해시값, 브랜치의 최신 상태 등을 나타냅니다.
@@ -385,7 +381,7 @@ npm run test
 - npm 패키지로 배포하여 `dvcs` 명령어로 전역으로 사용 가능하도록 개선할 계획입니다.
 - push/pull 구현을 통한 협업 기능을 추가할 계획입니다.
 
-**3. 고급 기능 구현**
+**3. 상세 기능 구현**
 - 병합 시 충돌이 발생했을 때 더 직관적으로 해결할 수 있는 UI를 구현할 계획입니다.
 - 한 브랜치의 커밋을 다른 브랜치 위로 재정렬하는 기능 추가할 계획입니다. (rebase 명령어 구현)
 - 파일이 많아져도 빠르게 동작하도록 최적화할 계획입니다.
