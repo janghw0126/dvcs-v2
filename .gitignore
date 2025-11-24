@@ -1,2 +1,3 @@
 .dvcs/
 node_modules/
+tmp_*/
