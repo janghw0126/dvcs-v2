@@ -13,8 +13,13 @@ function init() {
     fs.mkdirSync(path.join(repoPath, 'refs', 'heads'));
     fs.mkdirSync(path.join(repoPath, 'refs', 'tags'));
 
-    // HEAD 폴더 안에 현재 위치 가르킴
-    fs.writeFileSync(path.join(repoPath, 'HEAD'), '');
+    // master 브랜치 생성
+    const masterPath = path.join(repoPath, 'refs', 'heads', 'master');
+    fs.writeFileSync(masterPath, '');
+
+    // HEAD가 master 브랜치를 가리키도록 설정
+    const headPath = path.join(repoPath, 'HEAD');
+    fs.writeFileSync(headPath, 'ref: refs/heads/master');
 
     console.log(
       '.dvcs/ 폴더가 생성되었고, 버전 관리를 위한 기본 구조가 준비되었습니다.'
