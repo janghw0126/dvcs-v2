@@ -76,7 +76,7 @@ function merge(targetBranch) {
     fs.writeFileSync(headBranchPath, `${targetCommit}\n`);
 
     console.log(
-      `브랜치가 Fast-forward로 인해 '${targetBranch}'로 병합되었습니다.`
+      `Fast-forward: 현재 브랜치가 '${targetBranch}' 브랜치의 최신 커밋으로 이동했습니다.`
     );
     return;
   }

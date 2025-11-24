@@ -55,13 +55,13 @@ function log() {
     const content = fs.readFileSync(commitObjectPath, 'utf-8').trim();
     const lines = content.split('\n');
 
-    let parentHash = '';
+    let parents = [];
     let commitMessage = '';
 
     // 파싱
     for (const line of lines) {
       if (line.startsWith('parent ')) {
-        parentHash = line.split(' ')[1];
+        parents.push(line.split(' ')[1]);
       }
       if (line.startsWith('message ')) {
         commitMessage = line.substring('message '.length).trim();
@@ -72,7 +72,11 @@ function log() {
     console.log(`commit message - ${commitMessage}\n`);
 
     // 부모 커밋 탐색
-    currentCommitHash = parentHash;
+    if (parents.length > 0) {
+      currentCommitHash = parents[0];
+    } else {
+      currentCommitHash = null;
+    }
   }
 }
 
