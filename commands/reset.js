@@ -1,10 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const readTree = require('../utils/readTree');
 
 // soft reset 구현 -> HEAD만 특정 커밋으로 이동
-function reset(commitHash) {
+function reset(commitHash, option = '--soft') {
   const repoPath = path.join(process.cwd(), '.dvcs');
   const headPath = path.join(repoPath, 'HEAD');
+  const objectsPath = path.join(repoPath, 'objects');
+  const indexPath = path.join(repoPath, 'index');
 
   if (!fs.existsSync(repoPath)) {
     console.log(
@@ -18,9 +21,10 @@ function reset(commitHash) {
 
   // 현재 HEAD가 가리키는 커밋 해시 구하기
   let currentHeadCommit = '';
+  let branchPath = null;
 
   if (headContent.startsWith('ref: ')) {
-    const branchPath = path.join(repoPath, headContent.substring(5));
+    branchPath = path.join(repoPath, headContent.substring(5));
     if (fs.existsSync(branchPath)) {
       currentHeadCommit = fs.readFileSync(branchPath, 'utf-8').trim();
     }
@@ -35,10 +39,8 @@ function reset(commitHash) {
   }
 
   // reset하려는 커밋이 실제로 존재하는지 확인
-  const objectsPath = path.join(repoPath, 'objects');
   const dir = commitHash.substring(0, 2);
   const file = commitHash.substring(2);
-
   const commitObjectPath = path.join(objectsPath, dir, file);
 
   if (!fs.existsSync(commitObjectPath)) {
@@ -46,17 +48,51 @@ function reset(commitHash) {
     return;
   }
 
-  // HEAD가 브랜치를 가리키는 경우
-  if (headContent.startsWith('ref: ')) {
-    const branchPath = path.join(repoPath, headContent.substring(5));
+  if (branchPath) {
     fs.writeFileSync(branchPath, commitHash);
-    console.log(`브랜치가 ${commitHash}로 이동했습니다.`);
+  } else {
+    fs.writeFileSync(headPath, commitHash);
+  }
+
+  // 커밋만 이동시키는 soft reset인 경우
+  if (option === '--soft') {
+    console.log(`soft reset: HEAD가 ${commitHash}로 이동했습니다.`);
     return;
   }
 
-  // detached HEAD 상태인 경우
-  fs.writeFileSync(headPath, commitHash);
-  console.log(`HEAD가 직접 ${commitHash}로 이동했습니다 (detached HEAD 상태).`);
+  // 워킹 디렉토리를 바꾸는 hard reset인 경우
+  const commitContent = fs.readFileSync(commitObjectPath, 'utf-8');
+  const treeLine = commitContent
+    .split('\n')
+    .find((line) => line.startsWith('tree '));
+
+  const treeHash = treeLine.split(' ')[1];
+
+  // tree를 이용하여 파일 경로를 따라 해시 읽기
+  const files = readTree(treeHash, objectsPath);
+
+  // 워킹 디렉토리 초기화
+  for (const filePath in files) {
+    const blobHash = files[filePath];
+    const blobDir = blobHash.substring(0, 2);
+    const blobFile = blobHash.substring(2);
+    const blobPath = path.join(objectsPath, blobDir, blobFile);
+
+    const content = fs.readFileSync(blobPath, 'utf-8');
+    const absPath = path.join(process.cwd(), filePath);
+
+    fs.mkdirSync(path.dirname(absPath), { recursive: true });
+    fs.writeFileSync(absPath, content);
+  }
+
+  // index 재작성
+  const indexLines = Object.entries(files)
+    .map(([file, hash]) => `${hash} ${file}`)
+    .join('\n');
+
+  fs.writeFileSync(indexPath, indexLines + '\n');
+
+  console.log(`hard reset: ${commitHash} 상태로 복원되었습니다.`);
 }
 
 module.exports = reset;

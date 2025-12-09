@@ -49,7 +49,10 @@ switch (command) {
     break;
 
   case 'reset':
-    reset(arg1);
+    const option = args[1];
+    const commitHash = args[2];
+
+    reset(commitHash, option);
     break;
 
   default:
